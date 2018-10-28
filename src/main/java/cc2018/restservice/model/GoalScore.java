@@ -6,17 +6,17 @@ import javax.xml.bind.annotation.XmlAccessorType;
 
 @XmlRootElement(name = "score")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class GoalScoreModel {
+public class GoalScore {
 
     private String    id;
     private String    name;
     private Integer   score;
 
-    public GoalScoreModel() {
+    public GoalScore() {
         //
     }
 
-    public GoalScoreModel(String id, String name, Integer score) {
+    public GoalScore(String id, String name, Integer score) {
         this.id      = id;
         this.name    = name;
         this.score   = score;

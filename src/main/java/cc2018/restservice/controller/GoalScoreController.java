@@ -1,7 +1,7 @@
 package cc2018.restservice.controller;
 
+import cc2018.restservice.model.GoalScore;
 import cc2018.restservice.dao.GoalScoreDao;
-import cc2018.restservice.model.GoalScoreModel;
 
 import java.util.List;
 
@@ -9,10 +9,13 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.GenericEntity;
 
 @Path("/scores")
 public class GoalScoreController {
@@ -21,8 +24,9 @@ public class GoalScoreController {
     // /contextPath/servletPath/scores
     @GET
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    public List<GoalScoreModel> getScores() {
-        return GoalScoreDao.getAll();
+    public Response getScores() {
+        GenericEntity<List<GoalScore>> entity = new GenericEntity<List<GoalScore>>(GoalScoreDao.getAll()) {};
+        return Response.ok(entity).build();
     }
 
     // URI:
@@ -30,24 +34,28 @@ public class GoalScoreController {
     @GET
     @Path("/{id}")
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    public GoalScoreModel getScoreById(@PathParam("id") String id) {
-        return GoalScoreDao.get(id);
+    public Response getScoreById(@PathParam("id") String id) {
+        return Response.ok().entity(GoalScoreDao.get(id)).build();
     }
 
     // URI:
     // /contextPath/servletPath/scores
     @POST
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    public GoalScoreModel addScore(GoalScoreModel model) {
-        return GoalScoreDao.add(model);
+    public Response addScore(GoalScore model) {
+        GoalScore goalScore = GoalScoreDao.add(model);
+        return Response.status(Response.Status.CREATED).entity(goalScore).build();
     }
 
     // URI:
     // /contextPath/servletPath/scores
     @PUT
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    public GoalScoreModel updateScore(GoalScoreModel model) {
-        return GoalScoreDao.update(model);
+    public Response updateScore(GoalScore model) {
+        GoalScore goalScore = GoalScoreDao.update(model);
+        return Response.ok().entity(goalScore).build();
     }
 
     // URI:
@@ -55,7 +63,8 @@ public class GoalScoreController {
     @DELETE
     @Path("/{id}")
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    public void deleteScoreById(@PathParam("id") String id) {
+    public Response deleteScoreById(@PathParam("id") String id) {
         GoalScoreDao.delete(id);
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 }
